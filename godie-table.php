@@ -19,15 +19,15 @@ class GodieTable
 
     public function get_all()
     {
-        $table_content = $this->wpdb->get_results("SELECT ID,datetime,location,type,preacher,calid,info FROM `$this->table_name`");
+        $table_content = $this->wpdb->get_results("SELECT ID,eventdate,location,type,preacher,calid,info FROM `$this->table_name`");
         return $table_content;
     }
 
     public function insert_record($gd)
     {
         // prepare and bind
-        $stmt = $this->wpdb->prepare("INSERT INTO `$this->table_name` (ID, datetime, location, type, info, preacher, calid) values (%d,%s,%s,%s,%s,%s,%d)",
-                                     $gd->id, $gd->datetime->format(DateTime::ATOM), $gd->location, $gd->type, $gd->info, $gd->preacher, $gd->calid);
+        $stmt = $this->wpdb->prepare("INSERT INTO `$this->table_name` (ID, eventdate, location, type, info, preacher, calid) values (%d,%s,%s,%s,%s,%s,%d)",
+                                     $gd->id, $gd->eventdate->format(DateTime::ATOM), $gd->location, $gd->type, $gd->info, $gd->preacher, $gd->calid);
         // Executing the query   
         $this->wpdb->query($stmt);
         return $this->wpdb->insert_id;
@@ -36,8 +36,8 @@ class GodieTable
     function update_record($gd)
     {
         // prepare and bind
-        $stmt = $this->wpdb->prepare("UPDATE `$this->table_name` SET datetime=%s, location=%s type=%s, preacher=%s, calid=%d WHERE ID=%d",
-                                $gd->datetime->format(DateTime::ATOM), $gd->location, $gd->type, $gd->info ,$gd->preacher, $gd->calid, $gd->id);
+        $stmt = $this->wpdb->prepare("UPDATE `$this->table_name` SET eventdate=%s, location=%s type=%s, preacher=%s, calid=%d WHERE ID=%d",
+                                $gd->eventdate->format(DateTime::ATOM), $gd->location, $gd->type, $gd->info ,$gd->preacher, $gd->calid, $gd->id);
         // Executing the query
         $this->wpdb->query($stmt);
     }
@@ -70,7 +70,7 @@ class GodieTable
         if ($this->wpdb->get_var("show tables like '$this->table_name'") != $this->table_name) {
             $sql = "CREATE TABLE `$this->table_name` (
                     `ID` int(11) NOT NULL,
-                    `datetime` varchar(30)  NULL,
+                    `eventdate` DATETIME  NULL,
                     `location` varchar(50)  NULL,
                     `type` varchar(50)  NULL,
                     `preacher` varchar(50) NULL,

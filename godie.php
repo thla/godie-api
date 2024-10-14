@@ -6,7 +6,7 @@ class Godie
 {
     // Tag	Datum	Zeit	Ort	Gottesdienstart	Prediger
     public $id;
-    public $datetime;
+    public DateTime $eventdate;
     public $location;
     public $type;
     public $preacher;
@@ -20,7 +20,7 @@ class Godie
     public function load_from_xml_item($xml_item)
     {
         $this->id = (int) $xml_item->ID;
-        $this->datetime = DateTime::createFromFormat('d.m.Y H.i', (string) $xml_item->Datum . ' ' . (string) $xml_item->Zeit);
+        $this->eventdate = DateTime::createFromFormat('d.m.Y H.i', (string) $xml_item->Datum . ' ' . (string) $xml_item->Zeit);
         $this->location = (string) $xml_item->Gottesdienstort;
         list($gdtype, $gdinfo) = array_map('trim', explode('-', (string) $xml_item->Gottesdienstinfos, 2));
         $this->type = $gdtype;
@@ -36,12 +36,12 @@ class Godie
         // Insert an event.
         $submit = array(
             // Begin strings.
-            'event_begin' => $this->datetime->format('Y-m-d'), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-            'event_end' => $this->datetime->format('Y-m-d'), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+            'event_begin' => $this->eventdate->format('Y-m-d'), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+            'event_end' => $this->eventdate->format('Y-m-d'), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
             'event_title' => $this->type,
             'event_desc' => "<p>{$this->type}<br>{$this->info}<br>{$this->location}<br>{$this->preacher}</p>",
             'event_short' => "{$this->type} {$this->location}",
-            'event_time' => $this->datetime->format('H:i:s'),
+            'event_time' => $this->eventdate->format('H:i:s'),
             'event_endtime' => '',
             'event_link' => 'https://godi.ekiba.org/Godiorg/kbz-bretten-bruchsal/index.php?thema=Login&username=linkheidelsheim',
             'event_label' => '',

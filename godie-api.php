@@ -55,7 +55,7 @@ class GodieApi
             $items = $this->table->get_all();
             $validFor = new DateInterval('P10D'); // valid for 10 days
             foreach ($items as $item) {
-                $startDate = new DateTime($item->datetime);
+                $startDate = new DateTime($item->eventdate);
                 $isExpired = Godie::isExpired($startDate, $validFor);
                 if ($isExpired) {
                     if (function_exists('mc_delete_event')) {
@@ -163,3 +163,4 @@ class GodieApi
         return $gdArray;
     }
 }
+
